@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NEBULA Launcher: projeto independente para organizar perfis e conteúdo de Minecraft.">
+  <title>NEBULA Launcher</title>
+  <style>
+    :root{color-scheme:dark;--bg:#080b1b;--panel:#111735;--line:#2b356e;--purple:#a78bfa;--blue:#718bff;--text:#f2f3ff;--muted:#b1b8dc}
+    *{box-sizing:border-box} body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:radial-gradient(ellipse at 15% 0%,#24215a 0,transparent 42%),radial-gradient(ellipse at 90% 20%,#102b58 0,transparent 36%),var(--bg);color:var(--text);line-height:1.6}
+    .wrap{width:min(940px,92%);margin:auto}.top{padding:26px 0;border-bottom:1px solid #ffffff18}.brand{font-weight:800;letter-spacing:.16em;color:var(--purple)}
+    header{padding:84px 0 62px}.tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:6px 12px;color:#c8c6ff;font-size:13px}
+    h1{font-size:clamp(42px,8vw,76px);line-height:1.02;margin:22px 0 18px;letter-spacing:-.045em}h1 span{background:linear-gradient(90deg,var(--purple),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{max-width:700px;color:var(--muted);font-size:19px}.section{padding:30px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card{background:linear-gradient(145deg,#171e42dd,#0d1330ee);border:1px solid var(--line);border-radius:18px;padding:22px}.card h2,.card h3{margin-top:0}.card p{color:var(--muted);margin-bottom:0}.status{color:#c7f9e9}.note{border-left:3px solid var(--purple);padding:4px 0 4px 16px;color:var(--muted)}a{color:#c4b5fd}footer{margin-top:48px;padding:26px 0 40px;border-top:1px solid #ffffff18;color:var(--muted);font-size:13px}
+    
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+      padding: 14px 28px;
+      background: #303653;
+      color: #aeb5d0;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      border-radius: 12px;
+      cursor: not-allowed;
+      opacity: 0.75;
+      box-shadow: none;
+      border: 1px solid #454d70;
+    }
+    
+    @media(max-width:600px){header{padding:58px 0 38px}.lead{font-size:17px}}
+  </style>
+</head>
+<body>
+  <div class="top"><div class="wrap brand">✦ NEBULA LAUNCHER</div></div>
+  <header class="wrap">
+    <div class="tag">Projeto independente · Em desenvolvimento</div>
+    <h1>Seu Minecraft,<br><span>mais organizado.</span></h1>
+    <p class="lead">NEBULA é um launcher de Minecraft em desenvolvimento, criado para reunir em um só lugar a organização de perfis, versões e conteúdo para jogar com amigos e família.</p>
+    
+    <!-- Botão desativado -->
+    <button type="button" class="btn-download" disabled>
+      EM DESENVOLVIMENTO
+    </button>
+  </header>
+  <main class="wrap">
+    <section class="section">
+      <div class="grid">
+        <article class="card"><h3>Perfis e versões</h3><p>Organização de configurações e perfis do Minecraft para facilitar a preparação de diferentes partidas.</p></article>
+        <article class="card"><h3>Modrinth</h3><p>Integração já incluída no projeto para pesquisar conteúdo compatível com as versões e os carregadores selecionados.</p></article>
+        <article class="card"><h3>CurseForge</h3><p>Integração planejada por meio da API oficial do CurseForge, sujeita à aprovação e às permissões concedidas pela plataforma.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <article class="card">
+        <h2>Objetivo do projeto</h2>
+        <p>O objetivo do NEBULA é oferecer uma interface simples para organizar o Minecraft e encontrar conteúdo de modding. O projeto é pessoal e pensado para uso entre familiares e amigos.</p>
+        <p>O NEBULA não pretende hospedar, espelhar ou redistribuir arquivos de mods por conta própria. A integração com cada plataforma deverá respeitar sua API, suas condições de uso e as permissões dos autores.</p>
+      </article>
+    </section>
+    <section class="section">
+      <p class="note">O NEBULA é um projeto independente e não é afiliado, patrocinado ou oficialmente associado à Mojang, Microsoft, CurseForge, Overwolf ou Modrinth. Nomes e marcas pertencem aos seus respectivos proprietários.</p>
+    </section>
+  </main>
+  <footer><div class="wrap">NEBULA Launcher · Projeto independente de código em desenvolvimento.</div></footer>
+</body>
+</html>
