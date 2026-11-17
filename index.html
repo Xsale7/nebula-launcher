@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b18">
+  <meta name="description" content="NEBULA Launcher: organize perfis, versões e mods de Minecraft em um só lugar. Projeto independente em desenvolvimento.">
+  <title>NEBULA Launcher | Seu Minecraft, do seu jeito</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: #080b18;
+      --panel: rgba(18, 23, 45, .76);
+      --panel-solid: #11172c;
+      --text: #f4f5ff;
+      --muted: #a4abc5;
+      --purple: #9875ff;
+      --blue: #53b7ff;
+      --line: rgba(166, 177, 255, .14);
+      --glow: 0 0 70px rgba(119, 83, 255, .22);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body {
+      min-height: 100vh; color: var(--text); background: var(--bg);
+      font-family: 'DM Sans', sans-serif; overflow-x: hidden;
+      background-image:
+        radial-gradient(ellipse at 14% 8%, rgba(92, 69, 190, .19), transparent 34%),
+        radial-gradient(ellipse at 88% 28%, rgba(36, 128, 205, .12), transparent 32%),
+        linear-gradient(180deg, #090c1b 0%, #080b18 55%, #0a0d1d 100%);
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+      opacity: .22; background-image: radial-gradient(#b9c8ff 0.7px, transparent .7px);
+      background-size: 42px 42px; mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .container { width: min(1160px, calc(100% - 44px)); margin: auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20; border-bottom: 1px solid rgba(255,255,255,.07);
+      background: rgba(8, 11, 24, .76); backdrop-filter: blur(18px);
+    }
+    nav { height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 11px; font: 700 19px 'Space Grotesk', sans-serif; letter-spacing: .08em; }
+    .brand-mark {
+      display: grid; place-items: center; width: 37px; height: 37px; border-radius: 12px;
+      color: white; font-size: 20px; background: linear-gradient(135deg, #a17bff, #4c9eff);
+      box-shadow: 0 5px 24px rgba(130, 105, 255, .36);
+    }
+    .brand span:last-child { color: #fff; }
+    .nav-links { display: flex; align-items: center; gap: 30px; color: var(--muted); font-size: 13px; font-weight: 600; }
+    .nav-links a:hover { color: white; }
+    .nav-cta, .primary-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      border: 1px solid rgba(173, 151, 255, .38); border-radius: 12px;
+      padding: 12px 17px; color: white; font-weight: 700; font-size: 13px;
+      background: linear-gradient(120deg, rgba(133, 96, 255, .24), rgba(63, 151, 255, .18));
+      box-shadow: 0 8px 30px rgba(93, 74, 200, .12); transition: .2s ease;
+    }
+    .nav-cta:hover, .primary-btn:hover { transform: translateY(-2px); border-color: rgba(173,151,255,.75); }
+    .menu-toggle { display: none; color: white; background: none; border: 0; font-size: 25px; cursor: pointer; }
+
+    .hero { min-height: 690px; display: grid; grid-template-columns: 1.02fr .98fr; align-items: center; gap: 48px; padding: 84px 0 100px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 9px; color: #c4b5ff; font-size: 11px;
+      font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+      border: 1px solid rgba(166, 140, 255, .23); border-radius: 99px; padding: 9px 13px;
+      background: rgba(119, 91, 220, .10); margin-bottom: 25px;
+    }
+    .eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: #a68aff; box-shadow: 0 0 12px #a68aff; }
+    h1 { font: 700 clamp(46px, 6.2vw, 76px)/.99 'Space Grotesk', sans-serif; letter-spacing: -.065em; max-width: 650px; }
+    .gradient-text { background: linear-gradient(100deg, #c4a9ff 10%, #7dbdff 85%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-copy { color: var(--muted); line-height: 1.8; font-size: 16px; max-width: 530px; margin: 25px 0 30px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .download-disabled {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      min-height: 52px; padding: 0 21px; border: 1px solid rgba(255,255,255,.13);
+      border-radius: 13px; color: #9299b3; background: rgba(255,255,255,.055);
+      font-size: 12px; font-weight: 800; letter-spacing: .055em; cursor: not-allowed;
+      opacity: .78; user-select: none;
+    }
+    .secondary-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 20px; border-radius: 13px; border: 1px solid var(--line); color: #d8dcf1; font-weight: 700; font-size: 13px; }
+    .secondary-btn:hover { background: rgba(255,255,255,.06); }
+    .hero-note { margin-top: 18px; color: #737c9d; font-size: 11px; }
+    .hero-note strong { color: #a9b3d7; font-weight: 600; }
+
+    .preview-wrap { position: relative; perspective: 1200px; }
+    .orbit { position: absolute; inset: -45px -35px; border: 1px solid rgba(141, 126, 255, .13); border-radius: 50%; transform: rotate(-18deg); }
+    .orbit::before, .orbit::after { content: ""; position: absolute; border: 1px solid rgba(91, 169, 255, .12); border-radius: 50%; inset: 28px -18px; }
+    .orbit::after { inset: 68px 22px; transform: rotate(30deg); }
+    .preview {
+      position: relative; z-index: 1; overflow: hidden; border: 1px solid rgba(167, 159, 255, .24);
+      border-radius: 21px; background: linear-gradient(145deg, rgba(27, 34, 67, .97), rgba(11, 16, 35, .97));
+      box-shadow: 0 35px 100px rgba(0,0,0,.48), var(--glow); transform: rotateY(-8deg) rotateX(3deg);
+    }
+    .window-bar { height: 48px; padding: 0 17px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.025); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #606987; }
+    .window-title { margin-left: auto; color: #737d9e; font-size: 10px; letter-spacing: .12em; }
+    .mock-content { display: grid; grid-template-columns: 132px 1fr; min-height: 330px; }
+    .mock-side { padding: 22px 13px; border-right: 1px solid var(--line); background: rgba(4,8,22,.25); }
+    .mock-logo { font: 700 12px 'Space Grotesk'; letter-spacing: .13em; margin: 0 0 28px 7px; color: #cbbcff; }
+    .mock-item { padding: 10px 9px; border-radius: 8px; color: #828ba9; font-size: 10px; margin-bottom: 5px; }
+    .mock-item.active { color: white; background: linear-gradient(90deg, rgba(142,109,255,.25), rgba(83,155,255,.12)); border: 1px solid rgba(158,139,255,.16); }
+    .mock-main { padding: 25px 22px; }
+    .mock-greeting { font: 700 22px 'Space Grotesk'; letter-spacing: -.04em; }
+    .mock-sub { color: #7f89a9; font-size: 10px; margin-top: 5px; }
+    .mock-banner { margin-top: 21px; padding: 19px; border-radius: 13px; min-height: 118px; position: relative; overflow: hidden; background: radial-gradient(circle at 85% 30%, rgba(86,164,255,.4), transparent 35%), linear-gradient(115deg, #342b70, #172d57 75%); }
+    .mock-banner::after { content: "✦"; position: absolute; right: 24px; top: 3px; color: rgba(255,255,255,.2); font-size: 95px; }
+    .mock-tag { color: #d2c6ff; font-size: 8px; letter-spacing: .15em; font-weight: 800; }
+    .mock-banner strong { display: block; margin-top: 12px; font: 700 19px 'Space Grotesk'; }
+    .mock-banner small { display: block; margin-top: 5px; color: #c0c7e6; font-size: 9px; }
+    .mock-label { margin: 20px 0 10px; color: #9da7c7; font-size: 9px; font-weight: 800; letter-spacing: .13em; }
+    .mock-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; }
+    .mock-card { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.025); }
+    .mock-card b { display: block; font-size: 10px; margin-bottom: 5px; }
+    .mock-card span { color: #7f89a9; font-size: 8px; }
+    .float-chip { position: absolute; z-index: 3; right: -22px; bottom: 25px; padding: 12px 15px; border: 1px solid rgba(128,196,255,.25); border-radius: 12px; background: rgba(13,24,49,.94); box-shadow: 0 15px 45px rgba(0,0,0,.35); color: #b9dfff; font-size: 10px; font-weight: 700; }
+
+    section { padding: 88px 0; }
+    .section-head { max-width: 650px; margin: 0 auto 43px; text-align: center; }
+    .section-kicker { color: #a995ff; font-size: 10px; letter-spacing: .18em; font-weight: 800; text-transform: uppercase; margin-bottom: 13px; }
+    h2 { font: 700 clamp(30px, 4vw, 43px)/1.1 'Space Grotesk', sans-serif; letter-spacing: -.045em; }
+    .section-head p { color: var(--muted); line-height: 1.75; margin-top: 15px; font-size: 14px; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .feature {
+      padding: 25px; min-height: 205px; border: 1px solid var(--line); border-radius: 17px;
+      background: linear-gradient(145deg, rgba(24,30,57,.72), rgba(13,17,35,.72)); transition: .25s ease;
+    }
+    .feature:hover { transform: translateY(-5px); border-color: rgba(158,139,255,.35); background-color: rgba(34,39,73,.8); }
+    .feature-icon { display: grid; place-items: center; width: 39px; height: 39px; border-radius: 12px; margin-bottom: 20px; color: #c9baff; font-size: 18px; background: rgba(143,112,255,.14); border: 1px solid rgba(155,130,255,.18); }
+    .feature h3 { font: 600 17px 'Space Grotesk'; margin-bottom: 9px; }
+    .feature p { color: var(--muted); font-size: 12px; line-height: 1.75; }
+
+    .workflow { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 55px; }
+    .workflow-copy p { color: var(--muted); line-height: 1.8; font-size: 14px; margin-top: 18px; }
+    .steps { display: grid; gap: 12px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: rgba(18,23,45,.62); }
+    .step-num { flex: 0 0 31px; height: 31px; display: grid; place-items: center; border-radius: 9px; color: #cdbfff; background: rgba(143,112,255,.16); font: 700 12px 'Space Grotesk'; }
+    .step h3 { font-size: 13px; margin: 1px 0 5px; }
+    .step p { color: var(--muted); font-size: 11px; line-height: 1.6; }
+
+    .status-panel { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 30px; padding: 37px; border-radius: 21px; border: 1px solid rgba(150,130,255,.25); background: radial-gradient(ellipse at 90% 0%, rgba(77,143,255,.17), transparent 40%), linear-gradient(120deg, rgba(37,29,77,.72), rgba(16,25,50,.82)); box-shadow: var(--glow); }
+    .status-panel p { color: #b0b7d1; font-size: 13px; line-height: 1.75; margin-top: 12px; max-width: 650px; }
+    .status-pill { display: inline-flex; align-items: center; gap: 8px; color: #d7caff; border: 1px solid rgba(173,146,255,.3); border-radius: 99px; padding: 10px 14px; font-size: 10px; font-weight: 800; letter-spacing: .08em; white-space: nowrap; background: rgba(132,101,255,.12); }
+    .status-pill i { width: 6px; height: 6px; border-radius: 50%; background: #a58aff; }
+
+    footer { border-top: 1px solid var(--line); padding: 30px 0; color: #78819f; font-size: 11px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .footer-brand { color: #c4c9df; font: 700 13px 'Space Grotesk'; letter-spacing: .1em; }
+    .disclaimer { max-width: 550px; text-align: right; line-height: 1.7; }
+
+    @media (max-width: 850px) {
+      .hero { grid-template-columns: 1fr; gap: 70px; padding-top: 65px; }
+      .hero-copy { max-width: 620px; }
+      .preview-wrap { width: min(590px, 92%); margin: auto; }
+      .workflow { grid-template-columns: 1fr; gap: 30px; }
+      .features { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .container { width: min(100% - 32px, 1160px); }
+      nav { height: 68px; }
+      .menu-toggle { display: block; }
+      .nav-links { display: none; position: absolute; top: 68px; left: 0; right: 0; padding: 18px 22px 22px; flex-direction: column; align-items: stretch; gap: 18px; background: rgba(8,11,24,.98); border-bottom: 1px solid var(--line); }
+      .nav-links.open { display: flex; }
+      .nav-cta { display: none; }
+      .hero { min-height: auto; padding: 67px 0 80px; }
+      h1 { font-size: clamp(43px, 13vw, 61px); }
+      .hero-copy { font-size: 14px; }
+      .hero-actions { align-items: stretch; flex-direction: column; }
+      .download-disabled, .secondary-btn { width: 100%; }
+      .preview-wrap { width: 100%; }
+      .preview { transform: none; }
+      .mock-content { grid-template-columns: 92px 1fr; min-height: 290px; }
+      .mock-side { padding: 17px 8px; }
+      .mock-main { padding: 18px 12px; }
+      .mock-greeting { font-size: 17px; }
+      .mock-banner { padding: 14px; min-height: 105px; }
+      .mock-banner strong { font-size: 16px; }
+      .float-chip { right: -5px; bottom: -22px; }
+      section { padding: 70px 0; }
+      .features { grid-template-columns: 1fr; }
+      .feature { min-height: auto; }
+      .status-panel { grid-template-columns: 1fr; padding: 26px; }
+      .status-pill { width: fit-content; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .disclaimer { text-align: left; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <nav aria-label="Navegação principal">
+        <a class="brand" href="#inicio" aria-label="NEBULA Launcher, início">
+          <span class="brand-mark">✦</span><span>NEBULA</span>
+        </a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+        <div class="nav-links" id="navLinks">
+          <a href="#recursos">Recursos</a>
+          <a href="#como-funciona">O projeto</a>
+          <a href="#status">Desenvolvimento</a>
+        </div>
+        <a class="nav-cta" href="#download">Acompanhar o projeto <span>↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="container hero" id="inicio">
+      <div>
+        <div class="eyebrow"><i></i> UM NOVO JEITO DE ORGANIZAR SEU MINECRAFT</div>
+        <h1>Seu Minecraft.<br><span class="gradient-text">Seu universo.</span></h1>
+        <p class="hero-copy">Conheça o NEBULA Launcher, um projeto independente criado para deixar a organização de perfis, versões e conteúdo do Minecraft mais simples e centralizada.</p>
+        <div class="hero-actions" id="download">
+          <button class="download-disabled" type="button" disabled aria-disabled="true" title="O download ainda não está disponível">
+            <span>↓</span> EM DESENVOLVIMENTO
+          </button>
+          <a class="secondary-btn" href="#recursos">Conhecer o projeto <span>　→</span></a>
+        </div>
+        <p class="hero-note"><strong>Download ainda indisponível.</strong> Estamos trabalhando no projeto antes de liberar qualquer instalador.</p>
+      </div>
+
+      <div class="preview-wrap" aria-label="Prévia ilustrativa da interface do NEBULA Launcher">
+        <div class="orbit"></div>
+        <div class="preview">
+          <div class="window-bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="window-title">NEBULA LAUNCHER</span></div>
+          <div class="mock-content">
+            <aside class="mock-side">
+              <div class="mock-logo">✦ NEBULA</div>
+              <div class="mock-item active">⌂　Início</div>
+              <div class="mock-item">▦　Perfis</div>
+              <div class="mock-item">◇　Versões</div>
+              <div class="mock-item">✧　Conteúdo</div>
+              <div class="mock-item">⚙　Ajustes</div>
+            </aside>
+            <div class="mock-main">
+              <div class="mock-greeting">Seu espaço de jogo.</div>
+              <div class="mock-sub">Tudo organizado para sua próxima aventura.</div>
+              <div class="mock-banner">
+                <span class="mock-tag">✦ NEBULA LAUNCHER</span>
+                <strong>Uma nova jornada<br>começa aqui.</strong>
+                <small>Perfis, versões e mods em um só lugar.</small>
+              </div>
+              <div class="mock-label">ACESSO RÁPIDO</div>
+              <div class="mock-cards">
+                <div class="mock-card"><b>▦　Meus perfis</b><span>Organize suas instâncias</span></div>
+                <div class="mock-card"><b>◇　Explorar mods</b><span>Encontre conteúdo</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="float-chip">✦ Projeto independente</div>
+      </div>
+    </section>
+
+    <section id="recursos">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">Feito para facilitar</div>
+          <h2>Menos complicação.<br><span class="gradient-text">Mais tempo jogando.</span></h2>
+          <p>A proposta do NEBULA é reunir em um só lugar ferramentas úteis para organizar sua experiência com Minecraft, sem transformar tudo em uma configuração interminável.</p>
+        </div>
+        <div class="features">
+          <article class="feature">
+            <div class="feature-icon">▦</div>
+            <h3>Perfis organizados</h3>
+            <p>Uma forma prática de separar configurações e conteúdos para diferentes experiências de jogo.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">◇</div>
+            <h3>Versões de Minecraft</h3>
+            <p>Centralize a organização das versões e dos ambientes que você pretende utilizar.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">✧</div>
+            <h3>Conteúdo e mods</h3>
+            <p>Encontre conteúdo para personalizar sua experiência e mantenha tudo mais fácil de organizar.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">◈</div>
+            <h3>Integração Modrinth</h3>
+            <p>A integração com o Modrinth já faz parte do projeto e ajuda a explorar conteúdo compatível.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">⌘</div>
+            <h3>Interface direta</h3>
+            <p>Uma experiência pensada para deixar as tarefas principais acessíveis, sem excesso de etapas.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">＋</div>
+            <h3>Em evolução</h3>
+            <p>O NEBULA continua sendo desenvolvido. Novas funções serão apresentadas conforme ficarem prontas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-funciona">
+      <div class="container workflow">
+        <div class="workflow-copy">
+          <div class="section-kicker">A ideia por trás do projeto</div>
+          <h2>Seu jogo em ordem. <span class="gradient-text">Do seu jeito.</span></h2>
+          <p>O NEBULA Launcher nasceu de uma ideia simples: facilitar a organização de versões, perfis e mods para quem quer jogar sem perder tempo procurando tudo em vários lugares.</p>
+          <p>É um projeto independente, desenvolvido em Python e pensado para crescer com cuidado, etapa por etapa.</p>
+        </div>
+        <div class="steps">
+          <article class="step"><span class="step-num">01</span><div><h3>Organize seus perfis</h3><p>Separe suas configurações e deixe cada experiência de jogo no seu espaço.</p></div></article>
+          <article class="step"><span class="step-num">02</span><div><h3>Explore conteúdo</h3><p>Consulte conteúdo para Minecraft com a integração disponível no projeto.</p></div></article>
+          <article class="step"><span class="step-num">03</span><div><h3>Prepare sua experiência</h3><p>Tenha seus itens organizados para configurar sua próxima sessão de jogo.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="status">
+      <div class="status-panel">
+        <div>
+          <div class="section-kicker">Status do projeto</div>
+          <h2>Estamos construindo <span class="gradient-text">algo especial.</span></h2>
+          <p>O NEBULA Launcher ainda está em desenvolvimento. O instalador não foi liberado e o botão de download permanece bloqueado. A integração com o CurseForge também está planejada e depende da aprovação necessária para o uso da API.</p>
+        </div>
+        <div class="status-pill"><i></i> EM DESENVOLVIMENTO</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-brand">✦ NEBULA LAUNCHER</div>
+        <p style="margin-top:8px">© <span id="year"></span> NEBULA Launcher. Projeto independente.</p>
+      </div>
+      <p class="disclaimer">NEBULA Launcher não é afiliado, associado, autorizado ou endossado pela Mojang ou Microsoft. Minecraft é uma marca comercial de seus respectivos proprietários.</p>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.textContent = isOpen ? '×' : '☰';
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.textContent = '☰';
+      });
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
